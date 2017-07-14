@@ -1246,29 +1246,21 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
     return pblock->GetHash();
 }
 
-static const int64 nStartSubsidy = 5000 * COIN;
+static const int64 nStartSubsidy = 25 * COIN;
 static const int64 nMinSubsidy = 1 * COIN;
 
 int64 static GetBlockValue(int nHeight, int64 nFees)
 {
     int64 nSubsidy = nStartSubsidy;
-	// 1st week is bonus week
-			if(nHeight == 2)  
+	
+			if(nHeight == 1)  
     {
-        nSubsidy = 10000000 * COIN;
+        nSubsidy = 1000 * COIN;
    }
-	else if(nHeight < 8000)		// 1st 2 days x5
+	else if(nHeight < 25)		// first 25 blocks are worth 1.2* 25
 	{
-		nSubsidy *= 5;
+		nSubsidy *= 1.2;
 	}
-	else if(nHeight < 15000)	// next 2 days x3
-	{
-		nSubsidy *= 3;
-	}
-	else if(nHeight < 25000)	// next 3 days x2
-	{
-		nSubsidy *= 2;
-}
 	
     // Mining phase: Subsidy is cut in half every SubsidyHalvingInterval
     nSubsidy >>= ((nHeight - 100000)/ Params().SubsidyHalvingInterval());
@@ -1284,7 +1276,7 @@ int64 static GetBlockValue(int nHeight, int64 nFees)
     return nSubsidy + nFees;
 }
 
-static const int64 nTargetTimespan = 8 * 60; // 8 minutes
+static const int64 nTargetTimespan = 90 * 60; // every 3 hours
 static const int64 nTargetSpacing = 120; // 2 minutes
 static const int64 nInterval = nTargetTimespan / nTargetSpacing; // 4 blocks
 
@@ -1292,7 +1284,7 @@ static const int64 nAveragingInterval = nInterval * 20; // 80 blocks
 static const int64 nAveragingTargetTimespan = nAveragingInterval * nTargetSpacing; // 40 minutes
 
 static const int64 nMaxAdjustDown = 20; // 20% adjustment down
-static const int64 nMaxAdjustUp = 15; // 15% adjustment up
+static const int64 nMaxAdjustUp = 10; // 15% adjustment up
 
 static const int64 nTargetTimespanAdjDown = nTargetTimespan * (100 + nMaxAdjustDown) / 100;
 
